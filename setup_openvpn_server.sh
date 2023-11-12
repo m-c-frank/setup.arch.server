@@ -7,18 +7,18 @@ sudo pacman -S openvpn easy-rsa --noconfirm
 # Easy-RSA Configuration
 EASY_RSA="/etc/easy-rsa/"
 PKI_DIR="$EASY_RSA/pki"
-sudo mkdir -p "$EASY_RSA"
-sudo cp -r /usr/share/easy-rsa/* "$EASY_RSA" || { echo "Easy-RSA files not found. Exiting."; exit 1; }
+sudo mkdir -p "$PKI_DIR"
+sudo cp -r /usr/share/doc/easy-rsa/* "$EASY_RSA"
 cd "$EASY_RSA" || { echo "Failed to change directory to $EASY_RSA. Exiting."; exit 1; }
 
 # Initialize and build the CA
-sudo ./easyrsa init-pki
-sudo ./easyrsa build-ca nopass || { echo "Failed to build CA. Exiting."; exit 1; }
+sudo /usr/bin/easyrsa init-pki
+sudo /usr/bin/easyrsa build-ca nopass || { echo "Failed to build CA. Exiting."; exit 1; }
 
 # Generate Server Certificate, Key, and Encryption Files
-sudo ./easyrsa gen-req server nopass
-sudo ./easyrsa sign-req server server
-sudo ./easyrsa gen-dh || { echo "Failed to generate DH parameters. Exiting."; exit 1; }
+sudo /usr/bin/easyrsa gen-req server nopass
+sudo /usr/bin/easyrsa sign-req server server
+sudo /usr/bin/easyrsa gen-dh || { echo "Failed to generate DH parameters. Exiting."; exit 1; }
 
 # Generate ta.key for TLS Authentication
 sudo openvpn --genkey secret ta.key || { echo "Failed to generate ta.key. Exiting."; exit 1; }
